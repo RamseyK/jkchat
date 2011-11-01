@@ -1,0 +1,205 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CCF84E77145F978500238183 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF84E76145F978500238183 /* main.cpp */; };
+		CCF84E79145F978500238183 /* chatclient.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = CCF84E78145F978500238183 /* chatclient.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CCF84E70145F978500238183 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				CCF84E79145F978500238183 /* chatclient.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		CCF84E72145F978500238183 /* chatclient */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = chatclient; sourceTree = BUILT_PRODUCTS_DIR; };
+		CCF84E76145F978500238183 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		CCF84E78145F978500238183 /* chatclient.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = chatclient.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CCF84E6F145F978500238183 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CCF84E67145F978500238183 = {
+			isa = PBXGroup;
+			children = (
+				CCF84E75145F978500238183 /* chatclient */,
+				CCF84E73145F978500238183 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CCF84E73145F978500238183 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CCF84E72145F978500238183 /* chatclient */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CCF84E75145F978500238183 /* chatclient */ = {
+			isa = PBXGroup;
+			children = (
+				CCF84E76145F978500238183 /* main.cpp */,
+				CCF84E78145F978500238183 /* chatclient.1 */,
+			);
+			path = chatclient;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CCF84E71145F978500238183 /* chatclient */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CCF84E7C145F978500238183 /* Build configuration list for PBXNativeTarget "chatclient" */;
+			buildPhases = (
+				CCF84E6E145F978500238183 /* Sources */,
+				CCF84E6F145F978500238183 /* Frameworks */,
+				CCF84E70145F978500238183 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = chatclient;
+			productName = chatclient;
+			productReference = CCF84E72145F978500238183 /* chatclient */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CCF84E69145F978500238183 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = CCF84E6C145F978500238183 /* Build configuration list for PBXProject "chatclient" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CCF84E67145F978500238183;
+			productRefGroup = CCF84E73145F978500238183 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CCF84E71145F978500238183 /* chatclient */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CCF84E6E145F978500238183 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CCF84E77145F978500238183 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		CCF84E7A145F978500238183 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CCF84E7B145F978500238183 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		CCF84E7D145F978500238183 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		CCF84E7E145F978500238183 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CCF84E6C145F978500238183 /* Build configuration list for PBXProject "chatclient" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CCF84E7A145F978500238183 /* Debug */,
+				CCF84E7B145F978500238183 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CCF84E7C145F978500238183 /* Build configuration list for PBXNativeTarget "chatclient" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CCF84E7D145F978500238183 /* Debug */,
+				CCF84E7E145F978500238183 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CCF84E69145F978500238183 /* Project object */;
+}
