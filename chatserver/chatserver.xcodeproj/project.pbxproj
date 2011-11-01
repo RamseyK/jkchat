@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		B5547C9F145F913F0056EB92 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B5547C9E145F913F0056EB92 /* main.cpp */; };
 		B5547CA1145F913F0056EB92 /* chatserver.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B5547CA0145F913F0056EB92 /* chatserver.1 */; };
+		CCF84E93145F9F7C00238183 /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF84E92145F9F7C00238183 /* Client.cpp */; };
+		CCF84E95145FA19800238183 /* Server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF84E94145FA19800238183 /* Server.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +30,10 @@
 		B5547C9A145F913F0056EB92 /* chatserver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = chatserver; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5547C9E145F913F0056EB92 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		B5547CA0145F913F0056EB92 /* chatserver.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = chatserver.1; sourceTree = "<group>"; };
+		CCF84E8F145F9CF400238183 /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Server.h; sourceTree = "<group>"; };
+		CCF84E91145F9EDD00238183 /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
+		CCF84E92145F9F7C00238183 /* Client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Client.cpp; sourceTree = "<group>"; };
+		CCF84E94145FA19800238183 /* Server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Server.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +68,10 @@
 			children = (
 				B5547C9E145F913F0056EB92 /* main.cpp */,
 				B5547CA0145F913F0056EB92 /* chatserver.1 */,
+				CCF84E8F145F9CF400238183 /* Server.h */,
+				CCF84E94145FA19800238183 /* Server.cpp */,
+				CCF84E91145F9EDD00238183 /* Client.h */,
+				CCF84E92145F9F7C00238183 /* Client.cpp */,
 			);
 			path = chatserver;
 			sourceTree = "<group>";
@@ -117,6 +127,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5547C9F145F913F0056EB92 /* main.cpp in Sources */,
+				CCF84E93145F9F7C00238183 /* Client.cpp in Sources */,
+				CCF84E95145FA19800238183 /* Server.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,6 +215,7 @@
 				B5547CA6145F913F0056EB92 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

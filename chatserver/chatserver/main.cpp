@@ -7,12 +7,14 @@
 //
 
 #include <iostream>
+#include "Server.h"
 
 int main (int argc, const char * argv[])
 {
 
-    // insert code here...
-    std::cout << "Hello, World! CHANGED!\n";
+    Server *svr = new Server();
+    svr->runServer();
     return 0;
+    
 }
 
