@@ -91,6 +91,9 @@
 /* Begin PBXProject section */
 		CCF84E69145F978500238183 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = CCF84E6C145F978500238183 /* Build configuration list for PBXProject "chatclient" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -198,6 +201,7 @@
 				CCF84E7E145F978500238183 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
