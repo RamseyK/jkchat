@@ -10,8 +10,8 @@
 #define chatserver_Server_h
 
 #include <iostream>
-//Files for the socket
 #include <stdio.h>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -19,12 +19,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <list.h>
-#include <map.h>
+#include <list>
+#include <map>
+
 #include "Client.h"
 
 #define SOCKET int
 #define INVALID_SOCKET -1
+
+using namespace std;
 
 class Server {
     
