@@ -204,7 +204,8 @@ void Server::handleClient(Client *cl){
 
 
 void Server::sendData(Client *cl, char *pData, size_t dataLen){
-	int n = 0, totalSent = 0, bytesLeft = dataLen;
+	size_t totalSent = 0, bytesLeft = dataLen;
+	int n = 0;
 
 	// Solution to deal with partials sends...loop till totalSent matches dataLen
 	while(totalSent < dataLen) {
