@@ -204,7 +204,23 @@ void Server::handleClient(Client *cl){
 
 
 void Server::sendData(Client *cl, char *pData, size_t dataLen){
-    send(cl->getSocket(), pData, dataLen, 0);
+	int n = 0, totalSent = 0, bytesLeft = dataLen;
+
+	// Solution to deal with partials sends...loop till totalSent matches dataLen
+	while(totalSent < dataLen) {
+		n = send(cl->getSocket(), pData+totalSent, bytesLeft, 0);
+
+		//Client closed the connection
+		if(n == -1) {
+			printf("Client[%s] has disconnected\n", cl->getClientIP());
+			disconnectClient(cl);
+			break;
+		}
+
+		// Adjust byte count after a successful send
+		totalSent += n;
+		bytesLeft -= n;
+	}
 }
 
 
