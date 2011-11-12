@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC3986C21467986F003EA56F /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC3986BE1467986F003EA56F /* Client.cpp */; };
+		CC3986C31467986F003EA56F /* Screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC3986C01467986F003EA56F /* Screen.cpp */; };
 		CCF84E77145F978500238183 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF84E76145F978500238183 /* main.cpp */; };
 		CCF84E79145F978500238183 /* chatclient.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = CCF84E78145F978500238183 /* chatclient.1 */; };
 /* End PBXBuildFile section */
@@ -25,6 +27,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CC3986BE1467986F003EA56F /* Client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Client.cpp; sourceTree = "<group>"; };
+		CC3986BF1467986F003EA56F /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
+		CC3986C01467986F003EA56F /* Screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Screen.cpp; sourceTree = "<group>"; };
+		CC3986C11467986F003EA56F /* Screen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Screen.h; sourceTree = "<group>"; };
 		CCF84E72145F978500238183 /* chatclient */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = chatclient; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCF84E76145F978500238183 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		CCF84E78145F978500238183 /* chatclient.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = chatclient.1; sourceTree = "<group>"; };
@@ -60,6 +66,10 @@
 		CCF84E75145F978500238183 /* chatclient */ = {
 			isa = PBXGroup;
 			children = (
+				CC3986BE1467986F003EA56F /* Client.cpp */,
+				CC3986BF1467986F003EA56F /* Client.h */,
+				CC3986C01467986F003EA56F /* Screen.cpp */,
+				CC3986C11467986F003EA56F /* Screen.h */,
 				CCF84E76145F978500238183 /* main.cpp */,
 				CCF84E78145F978500238183 /* chatclient.1 */,
 			);
@@ -117,6 +127,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCF84E77145F978500238183 /* main.cpp in Sources */,
+				CC3986C21467986F003EA56F /* Client.cpp in Sources */,
+				CC3986C31467986F003EA56F /* Screen.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,14 +183,22 @@
 		CCF84E7D145F978500238183 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = "/usr/local/include/**";
+				LIBRARY_SEARCH_PATHS = "/usr/local/lib/**";
+				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
 		CCF84E7E145F978500238183 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = "/usr/local/include/**";
+				LIBRARY_SEARCH_PATHS = "/usr/local/lib/**";
+				OTHER_LDFLAGS = "-lncurses";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
 		};

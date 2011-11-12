@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:LICENSE.TXT">
-   </FileRef>
-   <FileRef
       location = "group:chatclient/chatclient.xcodeproj">
    </FileRef>
    <FileRef
