@@ -135,7 +135,8 @@ void Client::sendChatMsg(string msg) {
  * @param dataLen Size of the character array pData
  */
 void Client::sendData(char *pData, size_t dataLen){
-	size_t totalSent = 0, bytesLeft = dataLen, n = 0;
+	size_t totalSent = 0, bytesLeft = dataLen;
+	ssize_t n = 0;
 
 	// Solution to deal with partials sends...loop till totalSent matches dataLen
 	while(totalSent < dataLen) {
