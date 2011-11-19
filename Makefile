@@ -8,8 +8,8 @@ DBGFLAGS = $(DEBUG) $(WARN)
 # Production Flags
 PRODFLAGS = $(WARN)
 
-SHARED_H = shared/ByteBuffer.h shared/Packet.h shared/ChatMessage.h
-SHARED_SRC = shared/ByteBuffer.cpp shared/Packet.cpp shared/ChatMessage.cpp
+SHARED_H = shared/ByteBuffer.h shared/Packet.h shared/ChatMessage.h shared/LoginPacket.h shared/DCPacket.h
+SHARED_SRC = shared/ByteBuffer.cpp shared/Packet.cpp shared/ChatMessage.cpp shared/LoginPacket.cpp shared/DCPacket.cpp
 
 CLIENT_H   = chatclient/chatclient/Screen.h chatclient/chatclient/Client.h
 CLIENT_SRC = chatclient/chatclient/Screen.cpp chatclient/chatclient/Client.cpp chatclient/chatclient/main.cpp
