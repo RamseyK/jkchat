@@ -16,7 +16,6 @@
    limitations under the License.
 */
 
-#include <iostream>
 #include "Server.h"
 
 int main (int argc, const char * argv[])
