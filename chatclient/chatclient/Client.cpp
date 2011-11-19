@@ -90,7 +90,7 @@ bool Client::attemptConnect() {
  */
 void Client::clientProcess() {
 	size_t dataLen = 1300;
-	char *pData = new char(dataLen);
+	char *pData = new char[dataLen];
     
 	// Receive data on the wire into pData
 	/* TODO: Figure out what flags need to be set */
@@ -106,10 +106,34 @@ void Client::clientProcess() {
 		// No data to recv
 		return;
 	} else {
-		//Usable data was received, handle it
-		sc->printLine(pData);
-		//handleRequest(cl, pData, lenRecv);
+		//Usable data was received. Make a packet out of the bytes and handle it
+        Packet *pkt = new Packet((byte *)pData, (unsigned int)dataLen);
+		handleRequest(pkt);
+        delete pkt;
 	}
+    
+    delete [] pData;
+}
+
+// Takes a packet and handles it based on the opCode
+void Client::handleRequest(Packet *pkt) {
+    byte opCode = pkt->getOpcode();
+    switch (opCode) {
+        case OP(CHAT): {
+            // If the message received is a chat message, just print the name and contents
+            ChatMessage *chatPkt = new ChatMessage();
+            chatPkt->put(pkt);
+            chatPkt->setReadPos(1); // Set the read position for the buffer to be after the opCode byte
+            chatPkt->parse();
+            sc->printLine(chatPkt->getName() + ": " + chatPkt->getMessage());
+            delete chatPkt;
+        }
+            break;
+        case OP(DC):
+            break;
+        default:
+            break;
+    }
 }
 
 /**
@@ -119,12 +143,10 @@ void Client::clientProcess() {
  * @param msg String represenation of the message
  */
 void Client::sendChatMsg(string msg) {
-	// No protocol yet so just sendData()
-	size_t len = msg.size()+1;
-	char *data = new char[len];
-	memcpy(data, msg.c_str(), len);
-	sendData(data, len);
-	delete [] data;
+	ChatMessage *chatMsg = new ChatMessage();
+    chatMsg->setMessage(msg);
+	sendData(chatMsg);
+	delete chatMsg;
 }
 
 /**
@@ -134,16 +156,17 @@ void Client::sendChatMsg(string msg) {
  * @param pData Pointer to a character array of size dataLen to send to the server
  * @param dataLen Size of the character array pData
  */
-void Client::sendData(char *pData, size_t dataLen){
-	size_t totalSent = 0, bytesLeft = dataLen;
-	ssize_t n = 0;
+void Client::sendData(Packet *pkt){
+    byte *pData = pkt->create();
+	size_t totalSent = 0, bytesLeft = pkt->size(), dataLen = pkt->size();
+    ssize_t n = 0;
 
 	// Solution to deal with partials sends...loop till totalSent matches dataLen
 	while(totalSent < dataLen) {
 		n = send(clientSocket, pData+totalSent, bytesLeft, 0);
 
 		// Server closed the connection
-		if(n == -1) {
+		if(n < 0) {
 			sc->printLine("Error in sending data, socket closed, disconnecting\n");
 			clientRunning = false;
 			break;

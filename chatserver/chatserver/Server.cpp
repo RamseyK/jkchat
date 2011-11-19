@@ -132,6 +132,7 @@ void Server::disconnectClient(Client *cl){
     
     close(cl->getSocket());
     FD_CLR(cl->getSocket(), &fd_master);
+    clientMap->erase(cl->getSocket());
     
     delete cl;
     
@@ -191,28 +192,33 @@ void Server::handleClient(Client *cl){
         disconnectClient(cl);
     } else {
         //Usable data was received, handle it
-        printf("Data received: ");
+        /*printf("Data received: ");
         for (int i=0; i<lenRecv; i++) {
             printf("%c", pData[i]);
         }
         printf("\n");
-        handleRequest(cl, pData, lenRecv);
+        handleRequest(cl, pData, lenRecv);*/
+        
+        Packet *pkt = new Packet((byte *)pData, (unsigned int)lenRecv);
+        handleRequest(cl, pkt);
+        delete pkt;
     }
     
     delete [] pData;
 }
 
 
-void Server::sendData(Client *cl, char *pData, size_t dataLen){
-	size_t totalSent = 0, bytesLeft = dataLen;
-	ssize_t n = 0;
+void Server::sendData(Client *cl, Packet *pkt){
+    byte *pData = pkt->create();
+	size_t totalSent = 0, bytesLeft = pkt->size(), dataLen = pkt->size();
+    ssize_t n = 0;
 
 	// Solution to deal with partials sends...loop till totalSent matches dataLen
 	while(totalSent < dataLen) {
 		n = send(cl->getSocket(), pData+totalSent, bytesLeft, 0);
 
-		//Client closed the connection
-		if(n == -1) {
+		// Client closed the connection
+		if(n < 0) {
 			printf("Client[%s] has disconnected\n", cl->getClientIP());
 			disconnectClient(cl);
 			break;
@@ -224,14 +230,38 @@ void Server::sendData(Client *cl, char *pData, size_t dataLen){
 	}
 }
 
-
-void Server::handleRequest(Client *cl, char *pData, size_t dataLen){
-    map<int, Client*>::const_iterator it;
-    for (it = clientMap->begin(); it != clientMap->end(); it++) {
-        sendData(it->second, pData, dataLen);
+void Server::handleRequest(Client *cl, Packet *pkt){
+    byte opCode = pkt->getOpcode();
+    switch (opCode) {
+        case OP(LOGIN):
+            break;
+        case OP(CHAT): {
+            ChatMessage *chatPkt = new ChatMessage();
+            chatPkt->put(pkt);
+            chatPkt->setReadPos(1); // Set the read position for the buffer to be after the opCode byte
+            chatPkt->parse();
+            cout << chatPkt->getName() << ": " << chatPkt->getMessage() << endl;
+            broadcastData(chatPkt);
+            delete chatPkt;
+            }
+            break;
+        case OP(LIST):
+            break;
+        case OP(DC):
+            disconnectClient(cl);
+            break;
+        default:
+            break;
     }
 }
 
+// Sends a packet to every client in the map
+void Server::broadcastData(Packet *pkt) {
+    map<int, Client*>::const_iterator it;
+    for (it = clientMap->begin(); it != clientMap->end(); it++) {
+        sendData(it->second, pkt);
+    }
+}
 
 
 
