@@ -23,6 +23,8 @@
 #include <map>
 
 #include "Client.h"
+#include "../../shared/Packet.h"
+#include "../../shared/ChatMessage.h"
 
 #define SOCKET int
 #define INVALID_SOCKET -1
@@ -47,9 +49,10 @@ private:
     void acceptConnection();
     void disconnectClient(Client *);
     void handleClient(Client *);
-    void sendData(Client *, char *, size_t);
+    void sendData(Client *, Packet *pkt);
     Client *getClient(SOCKET);
-    void handleRequest(Client *, char *, size_t);
+    void handleRequest(Client *, Packet *pkt);
+    void broadcastData(Packet *pkt);
     
 public:
     Server();

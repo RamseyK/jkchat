@@ -14,6 +14,7 @@ int main (int argc, const char * argv[])
 
     Server *svr = new Server();
     svr->runServer();
+    delete svr;
     return 0;
     
 }

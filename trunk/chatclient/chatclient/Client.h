@@ -26,6 +26,8 @@
 #include <map>
 
 #include "Screen.h"
+#include "../../shared/Packet.h"
+#include "../../shared/ChatMessage.h"
 
 #define SOCKET int
 #define INVALID_SOCKET -1
@@ -41,7 +43,7 @@ private:
 	int port;
 	bool clientRunning;
 
-	void sendData(char *pData, size_t dataLen);
+	void sendData(Packet *pkt);
     
 public:
     Client(Screen *s);
@@ -51,6 +53,7 @@ public:
     bool attemptConnect();
     void clientProcess();
 	void sendChatMsg(string msg);
+    void handleRequest(Packet *pkt);
 	void disconnect();
 
 	void setClientRunning(bool c) {
