@@ -53,6 +53,9 @@ int main (int argc, const char * argv[])
 	// Disconnect and shutdown the socket
 	cl->disconnect();
 
+	// Wait for any key to be pressed before flushing the screen (useful so user can see any ncurses output after a disconnect)
+	getchar();
+
 	delete cl;
 	delete sc;
 
