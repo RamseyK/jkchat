@@ -1,6 +1,6 @@
 /**
-   jkchat, Client
-   Screen.h
+   jkchat
+   DCPacket.h
    Copyright 2011 Ramsey Kant, Keilan Jackson
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,30 +16,30 @@
    limitations under the License.
 */
 
-#ifndef chatclient_Screen_h
-#define chatclient_Screen_h
+#ifndef jkchat_DCPacket_h
+#define jkchat_DCPacket_h
 
-#include <iostream>
-#include <list>
-#include <map>
-#include <ncurses/curses.h>
+#include "Packet.h"
 
-using namespace std;
-
-class Screen {
+class DCPacket : public Packet {
 private:
-
-	char c; // Character input from user
-	int row, col, line; // Screen attributes
-	string input; // Full line input from user (aggregation of character input's, c)
-	map<int,string> *scbuf; // Screen Buffer map. Relates line number to string of the line
+	string reason; // Reason for disconnect
 
 public:
-	Screen();
-	~Screen();
+	DCPacket();
+	virtual ~DCPacket();
 
-	string processInput();
-	void printLine(string msg);
+	virtual byte* create();
+	virtual void parse();
+
+	string getReason() {
+		return reason;
+	}
+
+	void setReason(string r) {
+		reason = r;
+	}
+
 };
 
 #endif

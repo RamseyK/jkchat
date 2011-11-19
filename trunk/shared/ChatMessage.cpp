@@ -1,10 +1,20 @@
-//
-//  ChatMessage.cpp
-//  chatserver
-//
-//  Created by Keilan Jackson on 11/16/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
-//
+/**
+   jkchat
+   ChatMessage.cpp
+   Copyright 2011 Ramsey Kant, Keilan Jackson
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 
 #include "ChatMessage.h"
 
@@ -18,39 +28,55 @@ ChatMessage::~ChatMessage() {
     
 }
 
-//Structure of chat packet:   |opCode|size of name|name|size of message|message|
-
+/**
+ * Chat Message Create
+ * Populate the backing ByteBuffer with the expected ChatMessage structure as defined in the protocol
+ *
+ * Struct:
+ * INT: Size of the Username
+ * A_STR: Username string
+ * INT: Size of the chat message
+ * A_STR: Message string
+ *
+ * @return Byte array of the same size as the ByteBuffer (pkt->size()) of the built packet
+ */
 byte *ChatMessage::create() {
-    //Fill ByteBuffer with data in the expected ChatMessage structure
-    put(opCode);
+    // Build the packet
+	put(OP(CHAT));
     putInt((int)name.size()+1);
     putBytes((byte *)name.c_str(), (int)name.size()+1);
     putInt((int)message.size()+1);
     putBytes((byte *)message.c_str(), (int)message.size()+1);
     
-    //Create a byte array to return
+    // Create a byte array to return
     byte *ret = new byte[size()];
-    //Set read position to beginning of ByteBuffer
+    // Set read position to beginning of ByteBuffer
     setReadPos(0);
-    //Fill the byte array with the usable data in the ByteBuffer
+    // Fill the byte array with the usable data in the ByteBuffer (position 0 to size())
     getBytes(ret, size());
+
+	// Return the created byte array
     return ret;
     
 }
 
+/**
+ * Chat Message Parse
+ * Parses the ChatMessage data structure (after the opcode)
+ */
 void ChatMessage::parse() {
-    //Get the size of the username, read it in
+    //Get the size of the username
     int nameSize = getInt();
+	// Read in the username string of size, nameSize
     char *n = new char[nameSize];
     getBytes((byte *)n, nameSize);
 
-    
-    // Get the size of the message, read it in
+    // Get the size of the message
     int msgSize = getInt();
+	// Read in the message of size, msgSize
     char *msg = new char [msgSize];
     getBytes((byte *)msg, msgSize);
 
-    
     // Set the private variables
     this->name.assign(n);
     this->message.assign(msg);
@@ -61,19 +87,3 @@ void ChatMessage::parse() {
     
 }
 
-
-string ChatMessage::getName() {
-    return name;
-}
-
-string ChatMessage::getMessage() {
-    return message;
-}
-
-void ChatMessage::setName(string name) {
-    this->name = name;
-}
-
-void ChatMessage::setMessage(string message) {
-    this->message = message;
-}

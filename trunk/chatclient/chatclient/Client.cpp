@@ -1,23 +1,39 @@
-//
-//  Client.cpp
-//  chatclient
-//
-//  Created by Ramsey Kant on 11/4/11.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
-//
+/**
+   jkchat, Client
+   Client.cpp
+   Copyright 2011 Ramsey Kant, Keilan Jackson
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 
 #include "Client.h"
 
 /**
  * Client Constructor
  * Initializes default values for private members
+ *
+ * @param s Instance of the Screen class. Client will use this to communicate with the interface
  */
 Client::Client(Screen *s) {
+	// Set private Screen reference variable (sc) to the s
 	sc = s;
+
     clientSocket = INVALID_SOCKET;
-    memset(&hints, 0, sizeof(hints));
 	port = 27000;
 	clientRunning = false;
+
+	// Zero out the address hints structure
+    memset(&hints, 0, sizeof(hints));
 }
 
 /**
@@ -79,6 +95,12 @@ bool Client::attemptConnect() {
 	// Set as non blocking
 	fcntl(clientSocket, F_SETFL, O_NONBLOCK);
 
+	// Send LoginPacket to server
+	LoginPacket* loginPkt = new LoginPacket();
+	loginPkt->setUsername("");
+	sendData(loginPkt);
+	delete loginPkt;
+
 	// Otherwise, connect was successful!
 	return true;
 }
@@ -97,17 +119,18 @@ void Client::clientProcess() {
 	int flags = 0; 
 	ssize_t lenRecv = recv(clientSocket, pData, dataLen, flags);
     
-	//Determine state of client socket and act on it
+	// Act on return of recv. 0 = disconnect, -1 = no data, else the size to recv
 	if(lenRecv == 0) {
 		// Server closed the connection
 		sc->printLine("Socket closed by server, disconnecting\n");
 		clientRunning = false;
 	} else if(lenRecv == -1) {
-		// No data to recv
-		return;
+		// No data to recv. Empty case to trap
 	} else {
-		//Usable data was received. Make a packet out of the bytes and handle it
+		// Usable data was received. Create a new instance of a Packet, pass it the data from the wire
         Packet *pkt = new Packet((byte *)pData, (unsigned int)dataLen);
+
+		// Pass the new Packet to the Handler
 		handleRequest(pkt);
         delete pkt;
 	}
@@ -115,7 +138,12 @@ void Client::clientProcess() {
     delete [] pData;
 }
 
-// Takes a packet and handles it based on the opCode
+/**
+ * Handle Request
+ * Accepts an incomming packet from the server, parses it, and performs the appropriate action based on the opcode. Called from clientProcess()
+ *
+ * @param pkt Pointer to the packet recieved on the wire
+ */
 void Client::handleRequest(Packet *pkt) {
     byte opCode = pkt->getOpcode();
     switch (opCode) {
@@ -127,9 +155,21 @@ void Client::handleRequest(Packet *pkt) {
             chatPkt->parse();
             sc->printLine(chatPkt->getName() + ": " + chatPkt->getMessage());
             delete chatPkt;
-        }
+			}
             break;
-        case OP(DC):
+        case OP(DC): {
+			// Server has signaled a disconnect over the protocol
+			DCPacket *dcPkt = new DCPacket();
+			dcPkt->put(pkt); // Place all the data in the Packet into the newly created chatPkt
+			dcPkt->setReadPos(1); // Set the read position for the buffer to be after the opCode byte
+			dcPkt->parse();
+			
+			// Display reason on screen to user
+			sc->printLine("Disonnected by Server: " + dcPkt->getReason());
+
+			clientRunning = false;
+			delete dcPkt;
+			}
             break;
         default:
             break;
@@ -138,7 +178,7 @@ void Client::handleRequest(Packet *pkt) {
 
 /**
  * Send Chat Message to the server
- * Take string from the console, wrap it in an appropriate packet, and send it to the server
+ * Take string, wrap it in a ChatMessage and send it to the server
  *
  * @param msg String represenation of the message
  */
@@ -153,11 +193,14 @@ void Client::sendChatMsg(string msg) {
  * Send Data
  * Complete a send over the wire to a server.
  *
- * @param pData Pointer to a character array of size dataLen to send to the server
- * @param dataLen Size of the character array pData
+ * @param pkt Pointer to an instance of a Packet to send over the wire
  */
 void Client::sendData(Packet *pkt){
+	// Get the raw byte array by asking the Packet to build itself with create()
     byte *pData = pkt->create();
+	if(pData == NULL)
+		return;
+
 	size_t totalSent = 0, bytesLeft = pkt->size(), dataLen = pkt->size();
     ssize_t n = 0;
 
@@ -184,7 +227,10 @@ void Client::sendData(Packet *pkt){
  * Shutdown and close the socket handle, clean up any other resources in use
  */
 void Client::disconnect() {
+	// Free the address structure
 	freeaddrinfo(res);
+
+	// Shutdown and close the socket, then set in an invalid state
 	shutdown(clientSocket, SHUT_RDWR);
 	close(clientSocket);
     clientSocket = INVALID_SOCKET;
