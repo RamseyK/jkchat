@@ -11,14 +11,16 @@ PRODFLAGS = $(WARN)
 SHARED_H = shared/ByteBuffer.h shared/Packet.h shared/ChatMessage.h shared/LoginPacket.h shared/DCPacket.h
 SHARED_SRC = shared/ByteBuffer.cpp shared/Packet.cpp shared/ChatMessage.cpp shared/LoginPacket.cpp shared/DCPacket.cpp
 
-CLIENT_H   = chatclient/chatclient/Screen.h chatclient/chatclient/Client.h
-CLIENT_SRC = chatclient/chatclient/Screen.cpp chatclient/chatclient/Client.cpp chatclient/chatclient/main.cpp
+CLIENT_H   = chatclient/Screen.h chatclient/Client.h
+CLIENT_SRC = chatclient/Screen.cpp chatclient/Client.cpp chatclient/main.cpp
 
-SERVER_H   = chatserver/chatserver/Client.h chatserver/chatserver/Server.h
-SERVER_SRC = chatserver/chatserver/Client.cpp  chatserver/chatserver/Server.cpp chatserver/chatserver/main.cpp
+SERVER_H   = chatserver/Client.h chatserver/Server.h
+SERVER_SRC = chatserver/Client.cpp  chatserver/Server.cpp chatserver/main.cpp
 
 client: $(SHARED_SRC) $(SHARED_H) $(CLIENT_SRC) $(CLIENT_H)
 	$(CC) $(DBGFLAGS) -o bin/$@ $(SHARED_SRC) $(CLIENT_SRC) -lncurses
+
+guiclient: guibuild;
 
 server: $(SHARED_SRC) $(SHARED_H) $(SERVER_SRC) $(SERVER_H)
 	$(CC) $(DBGFLAGS) -o bin/$@ $(SHARED_SRC) $(SERVER_SRC)

@@ -1,0 +1,4 @@
+cd guiclient
+~/QtSDK/Desktop/Qt/474/gcc/bin/qmake guiclient.pro -r -spec macx-g++
+make all
+rm *.o
