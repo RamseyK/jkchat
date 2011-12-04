@@ -40,23 +40,23 @@ ChatMessage::~ChatMessage() {
  *
  * @return Byte array of the same size as the ByteBuffer (pkt->size()) of the built packet
  */
-byte *ChatMessage::create() {
+byte *ChatMessage::create(bool force) {
+	// Check for cached create data
+	if(checkCreate(force))
+		return createData;
+
     // Build the packet
 	put(OP(CHAT));
     putInt((int)name.size()+1);
     putBytes((byte *)name.c_str(), (int)name.size()+1);
     putInt((int)message.size()+1);
     putBytes((byte *)message.c_str(), (int)message.size()+1);
-    
-    // Create a byte array to return
-    byte *ret = new byte[size()];
-    // Set read position to beginning of ByteBuffer
-    setReadPos(0);
-    // Fill the byte array with the usable data in the ByteBuffer (position 0 to size())
-    getBytes(ret, size());
+
+	// Save created data
+	saveCreate();
 
 	// Return the created byte array
-    return ret;
+    return createData;
     
 }
 

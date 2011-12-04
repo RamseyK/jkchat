@@ -30,7 +30,7 @@ public:
 	LoginPacket();
 	virtual ~LoginPacket();
 
-	virtual byte* create();
+	virtual byte* create(bool force = false);
 	virtual void parse();
 
 	int getVersion() {

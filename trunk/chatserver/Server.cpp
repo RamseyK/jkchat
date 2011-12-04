@@ -333,7 +333,7 @@ void Server::handleRequest(Client *cl, Packet *pkt){
  * @param cl Client to send data to
  * @param pkt Packet containing data to be sent
  */
-void Server::sendData(Client *cl, Packet *pkt){
+void Server::sendData(Client *cl, Packet *pkt) {
 	// Get the raw byte array by asking the Packet to build itself with create()
     byte *pData = pkt->create();
 	if(pData == NULL)

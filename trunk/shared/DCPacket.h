@@ -29,7 +29,7 @@ public:
 	DCPacket();
 	virtual ~DCPacket();
 
-	virtual byte* create();
+	virtual byte* create(bool force = false);
 	virtual void parse();
 
 	string getReason() {

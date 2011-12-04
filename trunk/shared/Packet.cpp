@@ -27,7 +27,7 @@
  */
 Packet::Packet(unsigned int size) : ByteBuffer(size) {
     opCode = 0;
-    
+    createData = NULL;
 }
 
 /**
@@ -40,13 +40,17 @@ Packet::Packet(unsigned int size) : ByteBuffer(size) {
  */
 Packet::Packet(byte *data, unsigned int size) : ByteBuffer(data, size) {
     opCode = get();
+	createData = NULL;
 }
 
 /**
  * Packet Deconstructor
  */
 Packet::~Packet() {
-    
+    if(createData != NULL) {
+		delete createData;
+		createData = NULL;
+	}
 }
 
 /**
@@ -57,5 +61,38 @@ byte Packet::getOpcode() {
     return opCode;
 }
 
+/**
+ * Check Create
+ * Checks if cached data from previous create() calls is available
+ *
+ * @param force If force is true, createData should be destroyed and the buffer cleared for an upcoming rebuild in create().
+ * @return Return true if cached data is available, false if otherwise
+ */
+bool Packet::checkCreate(bool force) {
+	// If force is true, packet is required to flush and rebuilt itself (cannot use cached data)
+	if(force) {
+		if(createData != NULL) {
+			delete createData;
+			createData = NULL;
+		}
+		clear();
+	} else { // If cached data from a previous create() call exists
+		if(createData != NULL)
+			return true;
+	}
+	return false;
+}
 
+/**
+ * Save Create
+ * Cache's the current contents of the byte buffer in createData for future calls of create()
+ */
+void Packet::saveCreate() {
+    // Create a byte array to return
+    createData = new byte[size()];
+    // Set read position to beginning of ByteBuffer
+    setReadPos(0);
+    // Fill the byte array with the usable data in the ByteBuffer (position 0 to size())
+    getBytes(createData, size());
+}
 

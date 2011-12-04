@@ -1,6 +1,6 @@
 /**
-   jkchat, Client
-   Screen.h
+   jkchat
+   UserList.h
    Copyright 2011 Ramsey Kant, Keilan Jackson
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,33 +16,25 @@
    limitations under the License.
 */
 
-#ifndef chatclient_Screen_h
-#define chatclient_Screen_h
+#ifndef jkchat_UserList_h
+#define jkchat_UserList_h
 
-#include <iostream>
-#include <map>
-#ifdef __CYGWIN__
-#include <ncurses/curses.h> // Cygwin
-#else
-#include <ncurses.h> // OSX / Unix
-#endif
+#include "Packet.h"
 
-using namespace std;
-
-class Screen {
+class UserList : public Packet {
 private:
-
-	char c; // Character input from user
-	int row, col, line; // Screen attributes
-	string input; // Full line input from user (aggregation of character input's, c)
-	map<int,string> *scbuf; // Screen Buffer map. Relates line number to string of the line
+	vector<string> users;
 
 public:
-	Screen();
-	~Screen();
+	UserList();
+	virtual ~UserList();
 
-	string processInput();
-	void printLine(string msg);
+	virtual byte* create(bool force = false);
+	virtual void parse();
+
+	void addUser(string u);
+	int getListSize();
+	string getUser(int index);
 };
 
 #endif
