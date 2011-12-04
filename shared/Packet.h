@@ -38,6 +38,11 @@ class Packet : public ByteBuffer {
     
 protected:
     byte opCode; // Protocol Opcode of the Packet
+	byte* createData; // storage for generated data from create(). Should match size from size()
+
+	// create() caching - Check and Save data from create()
+	bool checkCreate(bool force);
+	void saveCreate();
 
 public:
     Packet(unsigned int size = 4096);
@@ -45,9 +50,8 @@ public:
     virtual ~Packet();
     byte getOpcode();
     
-    virtual byte *create(){return NULL;};
+    virtual byte *create(bool force=false){return NULL;};
     virtual void parse(){};
-    
 };
 
 

@@ -1,5 +1,5 @@
 /**
-   jkchat, Client
+   jkchat, GUIClient
    main.cpp
    Copyright 2011 Ramsey Kant, Keilan Jackson
 

@@ -31,7 +31,7 @@ public:
     ChatMessage();
     virtual ~ChatMessage();
     
-    virtual byte *create();
+    virtual byte *create(bool force = false);
     virtual void parse();
 
 	// Accessors and Mutators:
