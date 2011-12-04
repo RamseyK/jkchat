@@ -3,10 +3,13 @@
 CC = g++
 DEBUG = -g -fpermissive
 WARN = -Wall
+QTBIN = ~/QtSDK/Desktop/Qt/474/gcc/bin/
 # Debug Flags
 DBGFLAGS = $(DEBUG) $(WARN)
 # Production Flags
 PRODFLAGS = $(WARN)
+
+.PHONY: guiclient
 
 SHARED_H = shared/ByteBuffer.h shared/Packet.h shared/ChatMessage.h shared/LoginPacket.h shared/DCPacket.h shared/UserList.h
 SHARED_SRC = shared/ByteBuffer.cpp shared/Packet.cpp shared/ChatMessage.cpp shared/LoginPacket.cpp shared/DCPacket.cpp shared/UserList.cpp
@@ -20,7 +23,11 @@ SERVER_SRC = chatserver/Client.cpp  chatserver/Server.cpp chatserver/main.cpp
 client: $(SHARED_SRC) $(SHARED_H) $(CLIENT_SRC) $(CLIENT_H)
 	$(CC) $(DBGFLAGS) -o bin/$@ $(SHARED_SRC) $(CLIENT_SRC) -lncurses
 
-guiclient: guibuild;
+guiclient:
+	cd guiclient; \
+	$(QTBIN)qmake guiclient.pro -r -spec macx-g++; \
+	make all; \
+	rm *.o
 
 server: $(SHARED_SRC) $(SHARED_H) $(SERVER_SRC) $(SERVER_H)
 	$(CC) $(DBGFLAGS) -o bin/$@ $(SHARED_SRC) $(SERVER_SRC)

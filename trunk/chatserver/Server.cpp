@@ -117,12 +117,19 @@ void Server::acceptConnection() {
     
 }
 
+/**
+ * Run Server
+ * Main server loop where the socket is initialized and the loop is started, checking for new messages or clients to be read with select()
+ * and handling them appropriately
+ */
 void Server::runServer() {
     //Initializing the socket
     if (!initSocket()) {
         printf("Failed to set up the server\n");
         return;
     }
+
+	printf("jkchat Server has started successfully!\n\n");
     
     while(true) {
         //Copy the master set into fd_read for processing
