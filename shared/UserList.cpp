@@ -93,14 +93,41 @@ void UserList::parse() {
 	}
 }
 
+/**
+  * Add User
+  * Adds a user to the users vector
+  *
+  */
 void UserList::addUser(string u) {
 	users.push_back(u);
 }
 
+/**
+  * Get List Size
+  *
+  * @return the size of the users vector
+  */
 int UserList::getListSize() {
 	return users.size();
 }
 
+/**
+  * Get User
+  * Returns a username at the specified index
+  *
+  * @param index The index of the desired user
+  * @return string representation of the username
+  */
 string UserList::getUser(int index) {
 	return users[index];
+}
+
+/**
+  * Get List
+  * Returns the users vector
+  *
+  * @return vector of strings containing all of the users
+  */
+vector<string> UserList::getList() {
+    return users;
 }

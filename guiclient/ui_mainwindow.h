@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Dec 3 22:34:43 2011
+** Created: Mon Dec 5 20:00:04 2011
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -65,6 +65,7 @@ public:
         listUser = new QListView(centralwidget);
         listUser->setObjectName(QString::fromUtf8("listUser"));
         listUser->setGeometry(QRect(600, 50, 191, 401));
+        listUser->setEditTriggers(QAbstractItemView::NoEditTriggers);
         btnSend = new QPushButton(centralwidget);
         btnSend->setObjectName(QString::fromUtf8("btnSend"));
         btnSend->setGeometry(QRect(640, 460, 114, 32));

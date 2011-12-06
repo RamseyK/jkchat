@@ -5,7 +5,8 @@ HEADERS += \
     ../shared/LoginPacket.h \
     ../shared/DCPacket.h \
     ../shared/ChatMessage.h \
-    ../shared/ByteBuffer.h
+    ../shared/ByteBuffer.h \
+    ../shared/UserList.h
 
 SOURCES += \
     main.cpp \
@@ -15,10 +16,13 @@ SOURCES += \
     ../shared/LoginPacket.cpp \
     ../shared/DCPacket.cpp \
     ../shared/ChatMessage.cpp \
-    ../shared/ByteBuffer.cpp
+    ../shared/ByteBuffer.cpp \
+    ../shared/UserList.cpp
 
 FORMS += \
     mainwindow.ui
+
+
 
 
 

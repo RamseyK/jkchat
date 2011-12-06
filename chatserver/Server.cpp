@@ -166,8 +166,9 @@ void Server::runServer() {
  * Close the client's socket descriptor and release it from the FD map, client map, and memory
  *
  * @param cl Pointer to Client object
+ * @param notify If true, sends a user list update to all connected clients
  */
-void Server::disconnectClient(Client *cl) {
+void Server::disconnectClient(Client *cl, bool notify) {
     if (cl == NULL)
         return;
     
@@ -180,6 +181,9 @@ void Server::disconnectClient(Client *cl) {
     
 	// Free client object from memory
     delete cl;
+    
+    // Updates the user list with the new client
+    if(notify) updateUserList();
     
 }
 
@@ -212,7 +216,7 @@ void Server::closeSockets() {
     map<int, Client*>::const_iterator it;
     for (it = clientMap->begin(); it != clientMap->end(); it++) {
         Client *cl = it->second;
-        disconnectClient(cl);
+        disconnectClient(cl, false); // Don't notify clients of the disconnects
     }
     
     // Clear the map
@@ -294,7 +298,10 @@ void Server::handleRequest(Client *cl, Packet *pkt){
 
 			// Get the username and set it in the Client object
 			cl->setUsername(loginPkt->getUsername());
-						}
+            
+            // Updates the user list with the new client
+            updateUserList();
+            }
             break;
         case OP(CHAT): {
 			// A chat message was recieved. Create an instance of ChatMessage and parse it
@@ -377,6 +384,23 @@ void Server::broadcastData(Packet *pkt) {
     for (it = clientMap->begin(); it != clientMap->end(); it++) {
         sendData(it->second, pkt);
     }
+}
+
+/**
+ * Update User List
+ * Creates a UserList packet with the list of connected users to broadcast
+ *
+ */
+ 
+void Server::updateUserList() {
+    UserList *listPkt = new UserList();
+    map<int, Client*>::const_iterator it;
+    for (it = clientMap->begin(); it != clientMap->end(); it++) {
+        listPkt->addUser(it->second->getUsername());
+    }
+    
+    broadcastData(listPkt);
+    delete listPkt;
 }
 
 
