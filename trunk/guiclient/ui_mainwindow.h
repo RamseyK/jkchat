@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Dec 6 02:57:19 2011
+** Created: Tue Dec 6 04:09:49 2011
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -42,6 +42,7 @@ public:
     QLineEdit *textIP;
     QLineEdit *textPort;
     QLineEdit *textChat;
+    QLabel *labelListHead;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -61,10 +62,10 @@ public:
         labelName->setGeometry(QRect(10, 20, 51, 16));
         btnConnect = new QPushButton(centralwidget);
         btnConnect->setObjectName(QString::fromUtf8("btnConnect"));
-        btnConnect->setGeometry(QRect(630, 10, 114, 32));
+        btnConnect->setGeometry(QRect(640, 10, 114, 32));
         listUser = new QListView(centralwidget);
         listUser->setObjectName(QString::fromUtf8("listUser"));
-        listUser->setGeometry(QRect(600, 50, 191, 401));
+        listUser->setGeometry(QRect(600, 70, 191, 381));
         listUser->setEditTriggers(QAbstractItemView::NoEditTriggers);
         btnSend = new QPushButton(centralwidget);
         btnSend->setObjectName(QString::fromUtf8("btnSend"));
@@ -87,10 +88,13 @@ public:
         textChat = new QLineEdit(centralwidget);
         textChat->setObjectName(QString::fromUtf8("textChat"));
         textChat->setGeometry(QRect(10, 460, 581, 21));
+        labelListHead = new QLabel(centralwidget);
+        labelListHead->setObjectName(QString::fromUtf8("labelListHead"));
+        labelListHead->setGeometry(QRect(670, 50, 59, 17));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 800, 22));
+        menubar->setGeometry(QRect(0, 0, 800, 25));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -103,7 +107,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "jkchat Client", 0, QApplication::UnicodeUTF8));
         labelName->setText(QApplication::translate("MainWindow", "Name:", 0, QApplication::UnicodeUTF8));
         btnConnect->setText(QApplication::translate("MainWindow", "Connect", 0, QApplication::UnicodeUTF8));
         btnSend->setText(QApplication::translate("MainWindow", "Send", 0, QApplication::UnicodeUTF8));
@@ -111,6 +115,7 @@ public:
         lblPort->setText(QApplication::translate("MainWindow", "Port:", 0, QApplication::UnicodeUTF8));
         textIP->setText(QApplication::translate("MainWindow", "127.0.0.1", 0, QApplication::UnicodeUTF8));
         textPort->setText(QApplication::translate("MainWindow", "27000", 0, QApplication::UnicodeUTF8));
+        labelListHead->setText(QApplication::translate("MainWindow", "0 users", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
