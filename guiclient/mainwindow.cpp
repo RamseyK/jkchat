@@ -49,7 +49,6 @@ MainWindow::~MainWindow()
     delete loopTimer;
     delete userListModel;
     delete ui;
-
 }
 
 /**
@@ -81,6 +80,10 @@ void MainWindow::setClient(Client *c) {
   * @param list vector containing the users connected
   */
 void MainWindow::updateUserList(std::vector<std::string> list) {
+    // Update the list heading:
+    ui->labelListHead->setText(QString::number(list.size()) + " users");
+
+    // Populate the list:
     userStringList.clear();
     for(unsigned int i = 0; i<list.size(); i++) {
         userStringList.append(QString(list[i].c_str()));
@@ -96,6 +99,36 @@ void MainWindow::updateUserList(std::vector<std::string> list) {
 void MainWindow::loopTimeout() {
     if(cl->isClientRunning())
         cl->clientProcess();
+    else
+    	setConnectedOptions(false); // Client disconnected itself, so update the UI
+}
+
+/**
+ * Set Connected Options
+ * Configures the state of the GUI & Main application based on the connection state
+ * Starts/Stops the loop timer, toggles the connect button state
+ *
+ * @param connected If true, set the GUI in a connected state. If false, set in disconnected state
+ */
+void MainWindow::setConnectedOptions(bool connected) {
+	if(connected) {
+		// Start clientProcess timer
+		loopTimer->start();
+
+		// Toggle Connect button to disconnect
+		ui->btnConnect->setText("Disconnect");
+	} else {
+        // Stop clientProcess timer
+        loopTimer->stop();
+
+        // Clear the user list
+        ui->labelListHead->setText("0 users");
+        userStringList.clear();
+        userListModel->setStringList(userStringList);
+
+        // Toggle button to Connect
+        ui->btnConnect->setText("Connect");
+	}
 }
 
 /**
@@ -121,27 +154,14 @@ void MainWindow::on_btnConnect_clicked()
         if(!cl->attemptConnect(ui->textIP->text().toStdString(), ui->textPort->text().toInt()))
             return;
 
-        // Start clientProcess timer
-        loopTimer->start();
-
-        cl->setClientRunning(true);
-
-        // Toggle Connect button to disconnect
-        ui->btnConnect->setText("Disconnect");
+        // Set the UI in a connected state:
+        setConnectedOptions(true);
     } else {
-        // Stop clientProcess timer
-        loopTimer->stop();
-
         // Disconnect from network
         cl->disconnect();
-        cl->setClientRunning(false);
 
-        // Clear the user list
-        userStringList.clear();
-        userListModel->setStringList(userStringList);
-
-        // Toggle button to Connect
-        ui->btnConnect->setText("Connect");
+        // Set the UI in a disconnected state:
+        setConnectedOptions(false);
     }
 }
 
@@ -151,8 +171,16 @@ void MainWindow::on_btnConnect_clicked()
  */
 void MainWindow::on_btnSend_clicked()
 {
-    // Get the string representation of the user's input in textChat and send it to the server
+    // Client must be connected
+    if(!cl->isClientRunning())
+        return;
+
+    // Get the string representation of the user's input in textChat and that it's non empty
     string msg = ui->textChat->text().toStdString();
+    if(msg.empty())
+        return;
+
+    // Send the message to the server
     cl->sendChatMsg(msg);
 
     // Clear the textChat box

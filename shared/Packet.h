@@ -50,7 +50,13 @@ public:
     virtual ~Packet();
     byte getOpcode();
     
-    virtual byte *create(bool force=false){return NULL;};
+    virtual byte *create(bool force=false) {
+        // Check for cached create data
+        if(checkCreate(force))
+                return createData;
+        // Otherwise theres nothing, return NULL
+        return NULL;
+    };
     virtual void parse(){};
 };
 

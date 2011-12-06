@@ -48,6 +48,7 @@ using namespace std;
 class Server {
     
 private:
+	bool canRun;
     SOCKET listenSocket; // Descriptor for the listening socket
     map<SOCKET, Client*> *clientMap; // Maps a Socket descriptor to a pointer to a Client object (connected clients only)
     struct sockaddr_in serverAddr; // Structure for the server address
@@ -71,7 +72,10 @@ public:
     Server();
     ~Server();
     void runServer();
-    
+    void stopServer() {
+    	canRun = false;
+    }
+
 };
 
 #endif

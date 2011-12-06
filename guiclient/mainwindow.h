@@ -50,6 +50,7 @@ public:
 
     void printLine(std::string str);
     void setClient(Client *c);
+    void setConnectedOptions(bool connected);
     void updateUserList(std::vector<std::string> list);
 
 private slots:

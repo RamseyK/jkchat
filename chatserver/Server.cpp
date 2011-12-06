@@ -23,6 +23,7 @@
  * Initialize state and server variables
  */
 Server::Server() {
+	canRun = false;
     listenSocket = INVALID_SOCKET;
     memset(&serverAddr, 0, sizeof(serverAddr)); // Clear the address struct
     
@@ -39,7 +40,8 @@ Server::Server() {
  * Closes all active connections and deletes the clientMap
  */
 Server::~Server() {
-    closeSockets();
+	if(listenSocket != INVALID_SOCKET)
+		closeSockets();
     delete clientMap;
 }
 
@@ -81,6 +83,8 @@ bool Server::initSocket(int port) {
     // Set max fd to listenSocket
     fdmax = listenSocket;
     
+    canRun = true;
+
     return true;
 }
 
@@ -131,7 +135,7 @@ void Server::runServer() {
 
 	printf("jkchat Server has started successfully!\n\n");
     
-    while(true) {
+    while(canRun) {
         //Copy the master set into fd_read for processing
         fd_read = fd_master;
         
@@ -156,9 +160,8 @@ void Server::runServer() {
         }
         
     }
-    
+
     closeSockets(); //Closes all connections to the server
-    
 }
 
 /**
@@ -212,6 +215,8 @@ Client *Server::getClient(SOCKET clfd) {
  * Close all sockets found in the client map. Called on server shutdown
  */
 void Server::closeSockets() {
+	printf("Closing all connections and shutting down the listening socket..\n");
+
 	// Loop through all client's in the map and disconnect them
     map<int, Client*>::const_iterator it;
     for (it = clientMap->begin(); it != clientMap->end(); it++) {
@@ -227,6 +232,7 @@ void Server::closeSockets() {
     
     // Release the listenSocket to the OS
     close(listenSocket);
+    listenSocket = INVALID_SOCKET;
 }
 
 /**

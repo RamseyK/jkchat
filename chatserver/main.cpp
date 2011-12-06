@@ -16,14 +16,28 @@
    limitations under the License.
 */
 
+#include <signal.h>
 #include "Server.h"
+
+Server *svr;
+
+// Handles an unix terminiation signals (Ctrl C)
+void sighandler(int sig) {
+	svr->stopServer();
+}
 
 int main (int argc, const char * argv[])
 {
+	// Register sighandler for terminiation signals:
+	signal(SIGABRT, &sighandler);
+	signal(SIGINT, &sighandler);
+	signal(SIGTERM, &sighandler);
 
-    Server *svr = new Server();
+	// Instance and start the server
+    svr = new Server();
     svr->runServer();
     delete svr;
+
     return 0;
     
 }

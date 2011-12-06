@@ -101,6 +101,7 @@ bool Client::attemptConnect(string ip, int p) {
         return false;
     }
 
+    clientRunning = true;
     mw->printLine("Connection was successful!");
 
     // Set as non blocking
@@ -255,6 +256,7 @@ void Client::disconnect() {
     shutdown(clientSocket, SHUT_RDWR);
     close(clientSocket);
     clientSocket = INVALID_SOCKET;
+    clientRunning = false;
 
     mw->printLine("Client has disconnected from the server.\n");
 }
