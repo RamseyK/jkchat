@@ -3,7 +3,17 @@
 CC = g++
 DEBUG = -g -fpermissive
 WARN = -Wall
+UNAME = $(shell uname)
+
+# QT Settings
 QTBIN = ~/QtSDK/Desktop/Qt/474/gcc/bin/
+QTSPEC = 
+QTAPPNAME = guiclient
+ifeq (UNAME, Darwin)
+QTSPEC = -spec macx-g++
+QTAPPNAME = guiclient.app
+endif
+
 # Debug Flags
 DBGFLAGS = $(DEBUG) $(WARN)
 # Production Flags
@@ -25,9 +35,10 @@ client: $(SHARED_SRC) $(SHARED_H) $(CLIENT_SRC) $(CLIENT_H)
 
 guiclient:
 	cd guiclient; \
-	$(QTBIN)qmake guiclient.pro -r -spec macx-g++; \
+	$(QTBIN)qmake guiclient.pro -r $(QTSPEC); \
 	make all; \
-	rm *.o
+	rm *.o; \
+	mv $(QTAPPNAME) ../bin/$(QTAPPNAME)
 
 server: $(SHARED_SRC) $(SHARED_H) $(SERVER_SRC) $(SERVER_H)
 	$(CC) $(DBGFLAGS) -o bin/$@ $(SHARED_SRC) $(SERVER_SRC)
