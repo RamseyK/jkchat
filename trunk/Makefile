@@ -9,7 +9,7 @@ UNAME = $(shell uname)
 QTBIN = ~/QtSDK/Desktop/Qt/474/gcc/bin/
 QTSPEC = 
 QTAPPNAME = guiclient
-ifeq (UNAME, Darwin)
+ifeq ($(UNAME), Darwin)
 QTSPEC = -spec macx-g++
 QTAPPNAME = guiclient.app
 endif
