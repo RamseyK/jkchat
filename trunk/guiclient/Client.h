@@ -41,6 +41,7 @@
 #include "../shared/ChatMessage.h"
 #include "../shared/LoginPacket.h"
 #include "../shared/DCPacket.h"
+#include "../shared/UserList.h"
 
 #define SOCKET int
 #define INVALID_SOCKET -1

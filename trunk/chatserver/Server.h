@@ -38,6 +38,7 @@
 #include "../shared/ChatMessage.h"
 #include "../shared/LoginPacket.h"
 #include "../shared/DCPacket.h"
+#include "../shared/UserList.h"
 
 #define SOCKET int
 #define INVALID_SOCKET -1
@@ -58,12 +59,13 @@ private:
     bool initSocket(int port = 27000);
     void closeSockets();
     void acceptConnection();
-    void disconnectClient(Client *);
+    void disconnectClient(Client *, bool notify = true);
     void handleClient(Client *);
     void sendData(Client *, Packet *pkt);
     Client *getClient(SOCKET);
     void handleRequest(Client *, Packet *pkt);
     void broadcastData(Packet *pkt);
+    void updateUserList();
     
 public:
     Server();

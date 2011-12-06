@@ -35,6 +35,7 @@ public:
 	void addUser(string u);
 	int getListSize();
 	string getUser(int index);
+        vector<string> getList();
 };
 
 #endif

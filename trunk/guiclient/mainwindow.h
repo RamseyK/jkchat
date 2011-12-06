@@ -22,6 +22,8 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <iostream>
+#include <QStringListModel>
+#include <QSTringList>
 
 #include "Client.h"
 
@@ -38,6 +40,9 @@ class MainWindow : public QMainWindow
 private:
     Client *cl;
     QTimer *loopTimer;
+    QStringListModel *userListModel;
+    QStringList userStringList;
+
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -45,6 +50,7 @@ public:
 
     void printLine(std::string str);
     void setClient(Client *c);
+    void updateUserList(std::vector<std::string> list);
 
 private slots:
     void on_btnConnect_clicked();
@@ -52,6 +58,8 @@ private slots:
     void loopTimeout();
 
     void on_btnSend_clicked();
+
+    void on_textChat_returnPressed();
 
 private:
     Ui::MainWindow *ui;

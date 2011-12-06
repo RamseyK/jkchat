@@ -19,6 +19,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+/**
+  * MainWindow Constructor
+  * Sets up the ui, client process timer, user list
+  *
+  * @param parent Owner widget
+  */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -27,13 +33,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Setup the client process loop timer
     loopTimer = new QTimer(this);
+
+    // Instantiate the model for the userList that will be accepted by the ListView
+    userListModel = new QStringListModel();
+    ui->listUser->setModel(userListModel);
 }
 
+/**
+  * MainWindow Deconstructor
+  *
+  */
 MainWindow::~MainWindow()
 {
     loopTimer->stop();
     delete loopTimer;
+    delete userListModel;
     delete ui;
+
 }
 
 /**
@@ -59,6 +75,20 @@ void MainWindow::setClient(Client *c) {
 }
 
 /**
+  * Update User
+  * Updates the list in the GUI, called from the client's request handler when a ListPacket is received
+  *
+  * @param list vector containing the users connected
+  */
+void MainWindow::updateUserList(std::vector<std::string> list) {
+    userStringList.clear();
+    for(unsigned int i = 0; i<list.size(); i++) {
+        userStringList.append(QString(list[i].c_str()));
+    }
+    userListModel->setStringList(userStringList);
+}
+
+/**
  * Loop Timeout
  * When the main timer loop times out (any time there is an idle moment) call the client process function
  * This is basically the main loop for networking operations
@@ -81,6 +111,12 @@ void MainWindow::on_btnConnect_clicked()
 
     // If not connected, Attempt to connect to the server
     if(!cl->isClientRunning()) {
+        // Check if the entered username is empty
+        if(name.empty()) {
+            printLine("Please enter a username before connecting to the server");
+            return;
+        }
+
         // Attempt a connection to the IP and Port specified by the user
         if(!cl->attemptConnect(ui->textIP->text().toStdString(), ui->textPort->text().toInt()))
             return;
@@ -100,6 +136,10 @@ void MainWindow::on_btnConnect_clicked()
         cl->disconnect();
         cl->setClientRunning(false);
 
+        // Clear the user list
+        userStringList.clear();
+        userListModel->setStringList(userStringList);
+
         // Toggle button to Connect
         ui->btnConnect->setText("Connect");
     }
@@ -117,4 +157,13 @@ void MainWindow::on_btnSend_clicked()
 
     // Clear the textChat box
     ui->textChat->clear();
+}
+
+/**
+  * Enter Key Pressed
+  * Simulates a send button click when pressing enter in textChat
+  */
+void MainWindow::on_textChat_returnPressed()
+{
+    on_btnSend_clicked();
 }

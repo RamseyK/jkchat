@@ -182,6 +182,15 @@ void Client::handleRequest(Packet *pkt) {
         delete dcPkt;
     }
         break;
+    case OP(LIST): {
+        UserList *listPkt = new UserList();
+        listPkt->put(pkt);
+        listPkt->setReadPos(1);
+        listPkt->parse();
+        mw->updateUserList(listPkt->getList());
+
+        delete listPkt;
+    }
     default:
         break;
     }
