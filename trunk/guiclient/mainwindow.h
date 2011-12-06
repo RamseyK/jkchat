@@ -23,7 +23,7 @@
 #include <QTimer>
 #include <iostream>
 #include <QStringListModel>
-#include <QSTringList>
+#include <QStringList>
 
 #include "Client.h"
 
