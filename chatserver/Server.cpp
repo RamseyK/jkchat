@@ -185,9 +185,9 @@ void Server::disconnectClient(Client *cl, bool notify) {
 	// Free client object from memory
     delete cl;
     
-    // Updates the user list with the new client
-    if(notify) updateUserList();
-    
+    // Refreshes each client's user list
+    if(notify) 
+		updateUserList();
 }
 
 /**
@@ -307,7 +307,7 @@ void Server::handleRequest(Client *cl, Packet *pkt){
             
             // Updates the user list with the new client
             updateUserList();
-            }
+        }
             break;
         case OP(CHAT): {
 			// A chat message was recieved. Create an instance of ChatMessage and parse it
@@ -323,7 +323,7 @@ void Server::handleRequest(Client *cl, Packet *pkt){
             broadcastData(chatPkt);
 
             delete chatPkt;
-            }
+		}
             break;
         case OP(DC): {
 			// Client has signaled a disconnect over the protocol
@@ -338,7 +338,7 @@ void Server::handleRequest(Client *cl, Packet *pkt){
             disconnectClient(cl);
 
 			delete dcPkt;
-			}
+		}
             break;
         default:
 			cout << "[" << cl->getClientIP() << "] sent an unknown opcode " << opCode << endl;
@@ -394,27 +394,19 @@ void Server::broadcastData(Packet *pkt) {
 
 /**
  * Update User List
- * Creates a UserList packet with the list of connected users to broadcast
- *
+ * Creates a UserList packet with the list of connected users and broadcasts it to all connected clients
  */
- 
 void Server::updateUserList() {
     UserList *listPkt = new UserList();
+
+	// Loop through the client map and add each client's name to the UserList packet's internal list
     map<int, Client*>::const_iterator it;
     for (it = clientMap->begin(); it != clientMap->end(); it++) {
         listPkt->addUser(it->second->getUsername());
     }
     
+	// Send updated UserList to all connected clients
     broadcastData(listPkt);
+
     delete listPkt;
 }
-
-
-
-
-
-
-
-
-
-

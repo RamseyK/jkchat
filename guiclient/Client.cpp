@@ -191,10 +191,11 @@ void Client::handleRequest(Packet *pkt) {
         mw->updateUserList(listPkt->getList());
 
         delete listPkt;
-    }
+	}
+		break;
     default:
         break;
-    }
+	} // switch
 }
 
 /**
