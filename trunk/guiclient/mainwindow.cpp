@@ -98,7 +98,7 @@ void MainWindow::updateUserList(std::vector<std::string> list) {
  */
 void MainWindow::loopTimeout() {
     if(cl->isClientRunning())
-        cl->clientProcess();
+        cl->clientProcess(); // Run main client processing functions
     else
     	setConnectedOptions(false); // Client disconnected itself, so update the UI
 }
