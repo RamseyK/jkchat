@@ -140,6 +140,7 @@ void Server::runServer() {
         fd_read = fd_master;
         
         //Populate read_fd with client descriptors that are ready to be read
+        //Timeout is NULL so select() will wait until data is received
         if(select(fdmax+1, &fd_read, NULL, NULL, NULL) < 0) {
             continue;
         }
@@ -170,8 +171,9 @@ void Server::runServer() {
  *
  * @param cl Pointer to Client object
  * @param notify If true, sends a user list update to all connected clients
+ * @param eraseMap Used to control wheather or not the function should remove the client from the clientMap. If the map is being accessed by the calling function, it may be desireable to not modify the map here
  */
-void Server::disconnectClient(Client *cl, bool notify) {
+void Server::disconnectClient(Client *cl, bool notify, bool eraseMap) {
     if (cl == NULL)
         return;
     
@@ -179,8 +181,10 @@ void Server::disconnectClient(Client *cl, bool notify) {
     close(cl->getSocket());
 	// Remove from the FD map (used in select())
     FD_CLR(cl->getSocket(), &fd_master);
+    
 	// Remove from the clientMap
-    clientMap->erase(cl->getSocket());
+    if(eraseMap)
+        clientMap->erase(cl->getSocket());
     
 	// Free client object from memory
     delete cl;
