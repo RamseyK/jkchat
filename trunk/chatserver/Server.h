@@ -60,7 +60,7 @@ private:
     bool initSocket(int port = 27000);
     void closeSockets();
     void acceptConnection();
-    void disconnectClient(Client *, bool notify = true);
+    void disconnectClient(Client *, bool notify = true, bool eraseMap = true);
     void handleClient(Client *);
     void sendData(Client *, Packet *pkt);
     Client *getClient(SOCKET);
