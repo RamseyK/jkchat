@@ -59,6 +59,9 @@ bool Server::initSocket(int port) {
         printf("Could not create socket.\n");
         return false;
     }
+
+	// Set socket as non blocking
+	fcntl(listenSocket, F_SETFL, O_NONBLOCK);
  
     // Populate the server address structure
     serverAddr.sin_family = AF_INET; // Family: IP protocol
@@ -102,6 +105,9 @@ void Server::acceptConnection() {
     clfd = accept(listenSocket, (sockaddr*)&clientAddr, (socklen_t*)&clientAddrLen);
     if (clfd == INVALID_SOCKET)
         return;
+
+	// Set socket as non blocking
+	fcntl(clfd, F_SETFL, O_NONBLOCK);
     
     // Creating a new Client object, passing in the Socket handle and client IP address
     Client *cl = new Client(clfd, clientAddr);

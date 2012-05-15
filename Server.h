@@ -22,10 +22,15 @@
 #include <iostream>
 #include <stdio.h>
 
+// kqueue
+#include <sys/event.h>
+#include <sys/time.h>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -52,8 +57,6 @@ private:
     SOCKET listenSocket; // Descriptor for the listening socket
     map<SOCKET, Client*> *clientMap; // Maps a Socket descriptor to a pointer to a Client object (connected clients only)
     struct sockaddr_in serverAddr; // Structure for the server address
-    fd_set fd_master; // Master file descriptor set (listening socket + client sockets)
-    fd_set fd_read; // FD set of sockets being read/operated on
     int fdmax; // Max FD number (max sockets handle)
     
 private:
