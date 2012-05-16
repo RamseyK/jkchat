@@ -22,10 +22,7 @@
 #include <iostream>
 #include <stdio.h>
 
-// kqueue
-#include <sys/event.h>
-#include <sys/time.h>
-
+#include <sys/event.h> //kqueue
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -33,7 +30,6 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <list>
 #include <map>
 
@@ -58,9 +54,7 @@ private:
     SOCKET listenSocket; // Descriptor for the listening socket
     map<SOCKET, Client*> *clientMap; // Maps a Socket descriptor to a pointer to a Client object (connected clients only)
     struct sockaddr_in serverAddr; // Structure for the server address
-
 	int kqfd; // kqueue descriptor
-	struct timespec timeout;
 	struct kevent evlist[QUEUE_SIZE]; // Events that have changed (max QUEUE_SIZE at a time)
     
 private:
