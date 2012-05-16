@@ -17,5 +17,5 @@ server-kq: $(SHARED_SRC) $(SHARED_H) $(SERVER_KQ_SRC) $(SERVER_KQ_H)
 	$(CC) $(DBGFLAGS) -o bin/$@ $(SHARED_SRC) $(SERVER_KQ_SRC)
 
 clean:
-	rm -f *.o bin/* *~ \#*
+	rm -rf *.o bin/* *~ \#*
 

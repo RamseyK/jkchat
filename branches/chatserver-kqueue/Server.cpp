@@ -84,13 +84,9 @@ bool Server::initSocket(int port) {
 		return false;
 	}
 	
-	// Set kqueue timeout to 0 (returns instantly)
-	timeout.tv_sec = 0;
-	timeout.tv_nsec = 0;
-	
 	// Have kqueue track the listen socket
 	struct kevent kev;
-	EV_SET(&kev, listenSocket, EVFILT_READ, EV_ADD, 0, SOMAXCONN, NULL); // Fills in the kevent struct
+	EV_SET(&kev, listenSocket, EVFILT_READ, EV_ADD, 0, 0, NULL); // Fills in the kevent struct
 	kevent(kqfd, &kev, 1, NULL, 0, NULL); // Add the watch
     
     canRun = true;
@@ -151,12 +147,12 @@ void Server::runServer() {
 
     while(canRun) {
 		// Get a list of changed socket descriptors (if any) in evlist
-		nev = kevent(kqfd, NULL, 0, evlist, QUEUE_SIZE, &timeout);
+        // Timeout is NULL, kevent will wait for a change before returning
+		nev = kevent(kqfd, NULL, 0, evlist, QUEUE_SIZE, NULL);
         
         // Loop through only the sockets that have changed in the evlist array
         for(int i = 0; i < nev; i++) {
             if(evlist[i].ident == (unsigned int)listenSocket){ // A client is waiting to connect
-				// evlist[i].data contains # of connections in the backlog
                 acceptConnection();
             } else {
 				cl = (Client*)evlist[i].udata;
