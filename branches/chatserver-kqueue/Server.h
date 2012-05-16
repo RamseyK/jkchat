@@ -47,6 +47,7 @@
 
 #define SOCKET int
 #define INVALID_SOCKET -1
+#define QUEUE_SIZE 1024
 
 using namespace std;
 
@@ -57,7 +58,10 @@ private:
     SOCKET listenSocket; // Descriptor for the listening socket
     map<SOCKET, Client*> *clientMap; // Maps a Socket descriptor to a pointer to a Client object (connected clients only)
     struct sockaddr_in serverAddr; // Structure for the server address
-    int fdmax; // Max FD number (max sockets handle)
+
+	int kqfd; // kqueue descriptor
+	struct timespec timeout;
+	struct kevent evlist[QUEUE_SIZE]; // Events that have changed (max QUEUE_SIZE at a time)
     
 private:
     bool initSocket(int port = 27000);

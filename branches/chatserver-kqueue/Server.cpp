@@ -27,10 +27,6 @@ Server::Server() {
     listenSocket = INVALID_SOCKET;
     memset(&serverAddr, 0, sizeof(serverAddr)); // Clear the address struct
     
-    // Zero the file descriptor sets
-    FD_ZERO(&fd_master);
-    FD_ZERO(&fd_read);
-    
 	// Instance the clientMap, relates Socket Descriptor to pointer to Client object
     clientMap = new map<SOCKET, Client*>();
 }
@@ -47,12 +43,12 @@ Server::~Server() {
 
 /**
  * Init Socket
- * Initialize the Server Socket by requesting a socket handle, binding, and going into a listening state
+ * Initialize the Server by requesting a kqueue & socket handle, binding, and going into a listening state
  *
  * @param port Port to listen on
  * @return True if initialization succeeded. False if otherwise
  */
-bool Server::initSocket(int port) {
+bool Server::initSocket(int port) {	
     // Request a handle for the listening socket, TCP
     listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if(listenSocket == INVALID_SOCKET){
@@ -80,11 +76,22 @@ bool Server::initSocket(int port) {
         printf("Failed to put the socket in a listening state\n");
         return false;
     }
-    
-    // Add the listenSocket to the master fd list
-    FD_SET(listenSocket, &fd_master);
-    // Set max fd to listenSocket
-    fdmax = listenSocket;
+
+    // Setup kqueue
+	kqfd = kqueue();
+	if(kqfd == -1) {
+		printf("Could not create the kernel event queue\n");
+		return false;
+	}
+	
+	// Set kqueue timeout to 0 (returns instantly)
+	timeout.tv_sec = 0;
+	timeout.tv_nsec = 0;
+	
+	// Have kqueue track the listen socket
+	struct kevent kev;
+	EV_SET(&kev, listenSocket, EVFILT_READ, EV_ADD, 0, SOMAXCONN, NULL); // Fills in the kevent struct
+	kevent(kqfd, &kev, 1, NULL, 0, NULL); // Add the watch
     
     canRun = true;
 
@@ -112,12 +119,10 @@ void Server::acceptConnection() {
     // Creating a new Client object, passing in the Socket handle and client IP address
     Client *cl = new Client(clfd, clientAddr);
     
-    // Add to the master FD set
-    FD_SET(clfd, &fd_master);
-    
-    //If the client's handle is greater than the max, set the new max
-    if(clfd > fdmax)
-        fdmax = clfd;
+	// Have kqueue track the new client socket (udata contains a pointer to the Client object)
+	struct kevent kev;
+	EV_SET(&kev, clfd, EVFILT_READ, EV_ADD, 0, 0, cl); // Fills in the kevent struct
+	kevent(kqfd, &kev, 1, NULL, 0, NULL); // Add the watch
     
     // Add the client object to the client map
     clientMap->insert(pair<int, Client*>(clfd, cl));
@@ -140,29 +145,28 @@ void Server::runServer() {
     }
 
 	printf("jkchat Server has started successfully!\n\n");
-    
+	
+	int nev = 0; // Number of changed events returned by kevent
+	Client *cl = NULL;
+
     while(canRun) {
-        //Copy the master set into fd_read for processing
-        fd_read = fd_master;
+		// Get a list of changed socket descriptors (if any) in evlist
+		nev = kevent(kqfd, NULL, 0, evlist, QUEUE_SIZE, &timeout);
         
-        //Populate read_fd with client descriptors that are ready to be read
-        //Timeout is NULL so select() will wait until data is received
-        if(select(fdmax+1, &fd_read, NULL, NULL, NULL) < 0) {
-            continue;
-        }
-        
-        //Loop through all the descriptors in the read_fd set and check to see if data needs to be processed
-        for(int i=0; i <= fdmax; i++) {
-            // If SOCKET/int i isn't within the set of descriptors to be read, skip it
-            if(!FD_ISSET(i, &fd_read)) {
-                continue;
-            }
-            
-            // A new client is waiting to be accepted on the listenSocket
-            if(i == listenSocket){ // A client is waiting to connect
+        // Loop through only the sockets that have changed in the evlist array
+        for(int i = 0; i < nev; i++) {
+            if(evlist[i].ident == (unsigned int)listenSocket){ // A client is waiting to connect
+				// evlist[i].data contains # of connections in the backlog
                 acceptConnection();
             } else {
-                handleClient(getClient(i));
+				cl = (Client*)evlist[i].udata;
+				if(evlist[i].flags & EVFILT_READ) {
+                	handleClient(cl);
+				} else if(evlist[i].flags & EV_EOF) {
+					disconnectClient(cl);
+				} else {
+					// unhandled event
+				}
             }
         }
         
@@ -183,10 +187,8 @@ void Server::disconnectClient(Client *cl, bool notify, bool eraseMap) {
     if (cl == NULL)
         return;
     
-	// Close the socket descriptor
+	// Close the socket descriptor (will also remove from tracked kqueue fd's)
     close(cl->getSocket());
-	// Remove from the FD map (used in select())
-    FD_CLR(cl->getSocket(), &fd_master);
     
 	// Remove from the clientMap
     if(eraseMap)
@@ -231,7 +233,7 @@ void Server::closeSockets() {
     map<int, Client*>::const_iterator it;
     for (it = clientMap->begin(); it != clientMap->end(); it++) {
         Client *cl = it->second;
-        disconnectClient(cl, false); // Don't notify clients of the disconnects
+        disconnectClient(cl, false, false); // Don't notify clients of the disconnects
     }
     
     // Clear the map
