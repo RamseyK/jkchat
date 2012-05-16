@@ -10,11 +10,11 @@ PRODFLAGS = -03 -fpermissive -Wall
 SHARED_H = shared/ByteBuffer.h shared/Packet.h shared/ChatMessage.h shared/LoginPacket.h shared/DCPacket.h shared/UserList.h
 SHARED_SRC = shared/ByteBuffer.cpp shared/Packet.cpp shared/ChatMessage.cpp shared/LoginPacket.cpp shared/DCPacket.cpp shared/UserList.cpp
 
-SERVER_H   = chatserver-kqueue/Client.h chatserver-kqueue/Server.h
-SERVER_SRC = chatserver-kqueue/Client.cpp  chatserver-kqueue/Server.cpp chatserver-kqueue/main.cpp
+SERVER_KQ_H   = chatserver-kqueue/Client.h chatserver-kqueue/Server.h
+SERVER_KQ_SRC = chatserver-kqueue/Client.cpp  chatserver-kqueue/Server.cpp chatserver-kqueue/main.cpp
 
-server: $(SHARED_SRC) $(SHARED_H) $(SERVER_SRC) $(SERVER_H)
-	$(CC) $(DBGFLAGS) -o bin/$@ $(SHARED_SRC) $(SERVER_SRC)
+server-kq: $(SHARED_SRC) $(SHARED_H) $(SERVER_KQ_SRC) $(SERVER_KQ_H)
+	$(CC) $(DBGFLAGS) -o bin/$@ $(SHARED_SRC) $(SERVER_KQ_SRC)
 
 clean:
 	rm -f *.o bin/* *~ \#*
