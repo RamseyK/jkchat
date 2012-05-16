@@ -150,6 +150,10 @@ void Server::runServer() {
         // Timeout is NULL, kevent will wait for a change before returning
 		nev = kevent(kqfd, NULL, 0, evlist, QUEUE_SIZE, NULL);
         
+        // 0 = timeout, -1 = failure, check errno
+        if(nev <= 0)
+            continue;
+        
         // Loop through only the sockets that have changed in the evlist array
         for(int i = 0; i < nev; i++) {
             if(evlist[i].ident == (unsigned int)listenSocket){ // A client is waiting to connect
